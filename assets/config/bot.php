@@ -1,0 +1,29 @@
+<?php
+
+define('HOST', '172.17.0.2');
+define('USER', 'root');
+define('PASS', '');
+define('BASE', 'chatBot');
+
+try{
+    $conn = new pdo('mysql:host=' .HOST. ';dbname=' .BASE, USER, PASS);
+}catch(PDOException $erro){
+    echo 'Erro: Falha ao Conectar' .$erro->getMessage();
+}
+
+if($_POST){
+
+    $getMsg = $_POST['value'];
+
+    $stmt = $conn->prepare('SELECT * FROM tbl_mensagens WHERE usuario LIKE :pergunta');
+    $stmt->execute(array(':pergunta' => '%'.$getMsg.'%'));
+    if($stmt->rowCount() > 0){
+        $row = $stmt->fetch();
+        echo $row['robo'];
+    }else{
+
+        echo 'Desculpe, não sei a resposta, vou pesquisar e te falo amanhã.';
+
+    }
+
+}
